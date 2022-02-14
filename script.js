@@ -23,9 +23,9 @@ function manterConexao (){
 }
 
 function buscarMensagens(){
-    const requisicao = axios.get('https://mock-api.driven.com.br/api/v4/uol/messages');
-    requisicao.then(exibirMensagensNaTela);
-    //requisicao.catch((erro)=>{console.log(erro)});
+        const requisicao = axios.get('https://mock-api.driven.com.br/api/v4/uol/messages');
+        requisicao.then(exibirMensagensNaTela);
+        //requisicao.catch((erro)=>{console.log(erro)});
 }
 
 function exibirMensagensNaTela (sucesso){
@@ -34,17 +34,34 @@ function exibirMensagensNaTela (sucesso){
 
     for(let i=0; i<sucesso.data.length;i++){
         if(sucesso.data[i].type==="status"){
-            todasMensagens += `<div class="status">Mensagem entrou/saiu chumbada ${sucesso.data[i].text}</div>`;
+            todasMensagens += `<div class="status" data-identifier="message">${sucesso.data[i].time} <b>${sucesso.data[i].from}</b> ${sucesso.data[i].text}</div>`;
         }
         else if (sucesso.data[i].type==="message"){
-            todasMensagens +=`<div class="message">Mensage visível a todos chumbada ${sucesso.data[i].text}</div>`;
+            todasMensagens +=`<div class="message" data-identifier="message">${sucesso.data[i].time} <b>${sucesso.data[i].from}</b> para <b>${sucesso.data[i].to}</b>: ${sucesso.data[i].text}</div>`;
         }
         else {
-            todasMensagens += `<div class="private-message">Mensagem privada chumbada ${sucesso.data[i].text}</div>`;
+            if(sucesso.data[i].to===nome){
+                todasMensagens += `<div class="private-message" data-identifier="message">${sucesso.data[i].time} <b>${sucesso.data[i].from}</b> reservadamente para <b>${sucesso.data[i].to}</b>: ${sucesso.data[i].text}</div>`;
+            }
         }
     }
     const mensagens = document.querySelector(".main")
     mensagens.innerHTML = todasMensagens;
+}
+
+function enviarMensagem(){
+    const mensagem = document.querySelector("input").value;
+    const objetoMensagem = {
+        from: nome,
+        to: "todos",
+        text: mensagem,
+        type: "message" // ou "private_message" para o bônus
+    }
+    //alert (mensagem);
+    const requisicao = axios.post('https://mock-api.driven.com.br/api/v4/uol/messages', objetoMensagem);
+
+    requisicao.then(()=>{buscarMensagens()});
+    requisicao.catch(()=>{window.location.reload()});
 }
 
 /* comandos */
