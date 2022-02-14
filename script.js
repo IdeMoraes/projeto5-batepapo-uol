@@ -34,19 +34,22 @@ function exibirMensagensNaTela (sucesso){
 
     for(let i=0; i<sucesso.data.length;i++){
         if(sucesso.data[i].type==="status"){
-            todasMensagens += `<div class="status" data-identifier="message">${sucesso.data[i].time} <b>${sucesso.data[i].from}</b> ${sucesso.data[i].text}</div>`;
+            todasMensagens += `<div class="status mensagem" data-identifier="message"><span class="horario">${sucesso.data[i].time}</span> <b>${sucesso.data[i].from}</b> ${sucesso.data[i].text}</div>`;
         }
         else if (sucesso.data[i].type==="message"){
-            todasMensagens +=`<div class="message" data-identifier="message">${sucesso.data[i].time} <b>${sucesso.data[i].from}</b> para <b>${sucesso.data[i].to}</b>: ${sucesso.data[i].text}</div>`;
+            todasMensagens +=`<div class="message mensagem" data-identifier="message"><span class="horario">${sucesso.data[i].time}</span> <b>${sucesso.data[i].from}</b> para <b>${sucesso.data[i].to}</b>: ${sucesso.data[i].text}</div>`;
         }
         else {
             if(sucesso.data[i].to===nome){
-                todasMensagens += `<div class="private-message" data-identifier="message">${sucesso.data[i].time} <b>${sucesso.data[i].from}</b> reservadamente para <b>${sucesso.data[i].to}</b>: ${sucesso.data[i].text}</div>`;
+                todasMensagens += `<div class="private-message mensagem" data-identifier="message"><span class="horario">${sucesso.data[i].time}</span> <b>${sucesso.data[i].from}</b> reservadamente para <b>${sucesso.data[i].to}</b>: ${sucesso.data[i].text}</div>`;
             }
         }
     }
     const mensagens = document.querySelector(".main")
     mensagens.innerHTML = todasMensagens;
+
+    const elementoQueQueroQueApareca = document.querySelectorAll('.mensagem');
+    elementoQueQueroQueApareca[elementoQueQueroQueApareca.length-1].scrollIntoView();
 }
 
 function enviarMensagem(){
